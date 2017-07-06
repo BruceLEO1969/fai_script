@@ -2,10 +2,11 @@
 
 if [[ "$1" =~ ^([0-9]{1,3}.){3}[0-9]{1,3}$  ]]
 then
-  ip=$1
+  echo -e $1'\t\t'$(curl -s freeapi.ipip.net/$1 | sed 's/"//g; s/,/ /g; s/  / /g')
 else
-  ip=$(dig +noall +answer ${1} | awk '$4=="A" {print $NF}')
+  for i in $(dig +noall +answer ${1} | awk '$4=="A" {print $NF}')
+  do
+    echo -e $i'\t\t'$(curl -s freeapi.ipip.net/${i} | sed 's/"//g; s/,/ /g; s/  / /g')
+    sleep 1
+  done
 fi
-
-location=$(curl -s freeapi.ipip.net/${ip} | sed 's/"//g; s/,/ /g; s/  / /g')
-echo -e ${ip}'\t\t'${location}"')
